@@ -43,7 +43,7 @@ public class myHTTPRequestor {
     public static void main(String[] args) {
 
         String sTargetHost = "http://127.0.0.1:8080/";
-        int iSleepTimeMs = 10000;
+        int iSleepTimeMs = 1000;
 
         while (true) {
             callServlet(sTargetHost);
