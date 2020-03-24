@@ -1,16 +1,16 @@
+package com.example.myHTTPRequest;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.io.OutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.URLEncoder;
 
-import co.elastic.apm.api.ElasticApm;
-import co.elastic.apm.api.Transaction;
-import co.elastic.apm.api.Span;
+import co.elastic.apm.api.CaptureSpan;
+import co.elastic.apm.api.CaptureTransaction;
 
-public class myHTTPRequest {
+public class myHTTPRequestor {
 
+    @CaptureTransaction
     public static void callServlet(String sTargetHost) {
         try {
             URL url = new URL(sTargetHost);
@@ -39,9 +39,10 @@ public class myHTTPRequest {
         }
     }
 
+    @CaptureSpan
     public static void main(String[] args) {
 
-        String sTargetHost = "http://127.0.0.1:8888/";
+        String sTargetHost = "http://127.0.0.1:8080/";
         int iSleepTimeMs = 10000;
 
         while (true) {
