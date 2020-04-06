@@ -33,6 +33,10 @@ public class myHTTPRequestor {
             while ((inLine = in.readLine()) != null) {
                 System.out.println(inLine + "\n");
             }
+	    
+            //Disconnect:
+            http.disconnect();
+
         } catch (java.net.MalformedURLException e) {
             e.printStackTrace();
         } catch (java.io.IOException e) {
