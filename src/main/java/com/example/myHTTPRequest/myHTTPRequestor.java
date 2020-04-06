@@ -6,22 +6,23 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import co.elastic.apm.api.ElasticApm;
-import co.elastic.apm.api.CaptureSpan;
-import co.elastic.apm.api.CaptureTransaction;
+import co.elastic.apm.api.Transaction;
 
 public class myHTTPRequestor {
 
-    @CaptureTransaction
-    public static void callServlet(String sTargetHost) {
+    public static void callServlet(String target) {
+        Transaction transaction = ElasticApm.startTransaction();
         try {
-            URL url = new URL(sTargetHost);
+            transaction.setName("CallServlet");
+
+            URL url = new URL(target);
 
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
             http.setDoInput(true);
             http.setRequestMethod("GET");
 
-            System.out.println("GET [" + sTargetHost + "]\n");
+            System.out.println("GET [" + target + "]\n");
 
             //Connect:
             http.connect();
@@ -33,7 +34,7 @@ public class myHTTPRequestor {
             while ((inLine = in.readLine()) != null) {
                 System.out.println(inLine + "\n");
             }
-	    
+
             //Disconnect:
             http.disconnect();
 
@@ -41,24 +42,26 @@ public class myHTTPRequestor {
             e.printStackTrace();
         } catch (java.io.IOException e) {
             e.printStackTrace();
+        } finally {
+            transaction.end();
         }
     }
 
-    @CaptureSpan
     public static void main(String[] args) {
 
-        String sTargetHost = "http://127.0.0.1:8080/";
-        int iSleepTimeMs = 1000;
+        String target = "http://127.0.0.1:8080/";
+        int sleepTimeMs = 1000;
 
         while (true) {
-            callServlet(sTargetHost);
+            callServlet(target);
             try {
-                Thread.sleep(iSleepTimeMs);
+                Thread.sleep(sleepTimeMs);
             } catch (InterruptedException e) {
                 System.out.println("Exiting...\n");
             }
         }
     }
 }
+
 
 
