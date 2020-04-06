@@ -5,6 +5,7 @@ import java.net.URL;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import co.elastic.apm.api.ElasticApm;
 import co.elastic.apm.api.CaptureSpan;
 import co.elastic.apm.api.CaptureTransaction;
 
