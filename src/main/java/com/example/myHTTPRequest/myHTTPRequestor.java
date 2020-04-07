@@ -19,8 +19,18 @@ public class myHTTPRequestor {
 
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
-            http.setDoInput(true);
+            //http.setDoInput(true);
             http.setRequestMethod("GET");
+
+	    /*
+	     * elastic-apm-traceparent: 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01
+             * (_____________________)  () (______________________________) (______________) ()
+             *            v             v                 v                        v         v
+             *       Header name     Version           Trace-Id                Span-Id     Flags
+	     */
+	    http.setRequestProperty ("traceparent", "00-"+
+			    transaction.getTraceId()+"-"+
+			    transaction.getId()+"-01");
 
             System.out.println("GET [" + target + "]\n");
 
