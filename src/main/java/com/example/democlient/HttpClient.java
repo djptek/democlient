@@ -1,4 +1,4 @@
-package com.example.myHTTPRequest;
+package com.example.democlient;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import co.elastic.apm.api.ElasticApm;
 import co.elastic.apm.api.Transaction;
 
-public class myHTTPRequestor {
+public class HttpClient {
 
     public static void callServlet(String target) {
         Transaction transaction = ElasticApm.startTransaction();
@@ -19,9 +19,7 @@ public class myHTTPRequestor {
 
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
-            //http.setDoInput(true);
             http.setRequestMethod("GET");
-
 	    /*
 	     * elastic-apm-traceparent: 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01
              * (_____________________)  () (______________________________) (______________) ()
