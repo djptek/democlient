@@ -6,13 +6,14 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import co.elastic.apm.api.ElasticApm;
+import co.elastic.apm.api.Scope;
 import co.elastic.apm.api.Transaction;
 
 public class HttpClient {
 
     public static void callServlet(String target) {
         Transaction transaction = ElasticApm.startTransaction();
-        try {
+        try (final Scope scope = transaction.activate()) {
             transaction.setName("CallServlet");
 
             URL url = new URL(target);
@@ -25,10 +26,10 @@ public class HttpClient {
              * (_____________________)  () (______________________________) (______________) ()
              *            v             v                 v                        v         v
              *       Header name     Version           Trace-Id                Span-Id     Flags
-	     */
 	    http.setRequestProperty ("traceparent", "00-"+
 			    transaction.getTraceId()+"-"+
 			    transaction.getId()+"-01");
+	     */
 
             System.out.println("GET [" + target + "]\n");
 
