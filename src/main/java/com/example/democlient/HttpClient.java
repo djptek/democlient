@@ -1,43 +1,40 @@
 package com.example.democlient;
 
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.IOException;
 
 import co.elastic.apm.api.ElasticApm;
 import co.elastic.apm.api.Scope;
 import co.elastic.apm.api.Transaction;
 
+//open tracing
+import co.elastic.apm.opentracing.ElasticApmTracer;
+import io.opentracing.Tracer;
+
 public class HttpClient {
 
     public static void callServlet(String target) {
+        Tracer tracer = new ElasticApmTracer();
         Transaction transaction = ElasticApm.startTransaction();
         try (final Scope scope = transaction.activate()) {
             transaction.setName("CallServlet");
 
             URL url = new URL(target);
-
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
             http.setRequestMethod("GET");
-	    /*
-	     * elastic-apm-traceparent: 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01
-             * (_____________________)  () (______________________________) (______________) ()
-             *            v             v                 v                        v         v
-             *       Header name     Version           Trace-Id                Span-Id     Flags
-	    http.setRequestProperty ("traceparent", "00-"+
-			    transaction.getTraceId()+"-"+
-			    transaction.getId()+"-01");
-	     */
-
             System.out.println("GET [" + target + "]\n");
 
             //Connect:
             http.connect();
 
             //Wait for answer.
-            BufferedReader in = new BufferedReader(new InputStreamReader(http.getInputStream()));
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(http.getInputStream()));
             String inLine = null;
 
             while ((inLine = in.readLine()) != null) {
@@ -47,10 +44,8 @@ public class HttpClient {
             //Disconnect:
             http.disconnect();
 
-        } catch (java.net.MalformedURLException e) {
-            e.printStackTrace();
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            transaction.captureException(e);
         } finally {
             transaction.end();
         }
