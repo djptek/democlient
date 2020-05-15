@@ -11,10 +11,6 @@ import co.elastic.apm.api.ElasticApm;
 import co.elastic.apm.api.Scope;
 import co.elastic.apm.api.Transaction;
 
-//open tracing
-import co.elastic.apm.opentracing.ElasticApmTracer;
-import io.opentracing.Tracer;
-
 public class HttpClient {
 
     public static void callServlet(String target) {

@@ -14,7 +14,6 @@ repositories {
 
 dependencies {
     compile 'co.elastic.apm:apm-agent-api:1.15.0'
-    compile 'co.elastic.apm:apm-opentracing:1.15.0'
 }
 
 jar {
